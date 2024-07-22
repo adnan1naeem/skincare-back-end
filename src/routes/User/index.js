@@ -1,8 +1,8 @@
+const router = require("express").Router();
 
-const router = require('express').Router();
+router.use("/", require("./Users"));
+router.use("/products", require("./Products"));
+router.use("/skinnalysis", require("./SkinAnalysis"));
+router.use("/dailyroutine", require("./DailyRoutine"));
 
-router.use('/skinnalysis', require('./SkinAnalysis'))
-router.use('/dailyroutine', require('./DailyRoutine'))
-router.use('/users', require('./Users'))
-
-module.exports = router
+module.exports = router;
