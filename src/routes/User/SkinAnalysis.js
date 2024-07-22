@@ -5,7 +5,7 @@ const SkinAnalysisDescription =require('../../models/SkinAnalysisDescription')
 router.post('/', async (req, res) => {
   const { hydration, oilness, elastcity, skinAge } = req.body;
   try {
-
+const user = req.user
     const levels = {
       low: (value) => value < 35,
       medium: (value) => value >= 35 && value <= 60,
@@ -17,7 +17,6 @@ router.post('/', async (req, res) => {
       if (levels.medium(value)) return 'medium';
       if (levels.high(value)) return 'high';
     };
-    console.log(1);
     const results = await Promise.all([
       SkinAnalysisDescription.findOne({ parameter: 'oilness', level: getLevel(oilness) }),
       SkinAnalysisDescription.findOne({ parameter: 'elasticity', level: getLevel(elastcity) }),
@@ -25,7 +24,7 @@ router.post('/', async (req, res) => {
     ]);
 
     if (results.every(result => result)) {
-      const skinAnalysis = new Skinanalysis({ hydration, oilness, elastcity, skinAge });
+      const skinAnalysis = new Skinanalysis({ hydration, oilness, elastcity, skinAge,userId:user._id });
       await skinAnalysis.save();
      return res.status(201).json({
         message: 'Skin analysis data saved successfully',
