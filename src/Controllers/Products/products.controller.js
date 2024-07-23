@@ -33,9 +33,9 @@ const getRelevant = async (req, res, next) => {
     });
 
     // Determine user's skin type based on skin analysis
-    const userHydrationType = getSkinType(userSkinAnalysis.hydration);
-    const userOilType = getSkinType(userSkinAnalysis.oilness);
-    const userElasticityType = getSkinType(userSkinAnalysis.elastcity);
+    const userHydrationType = await getSkinType(userSkinAnalysis.hydration);
+    const userOilType = await getSkinType(userSkinAnalysis.oilness);
+    const userElasticityType = await getSkinType(userSkinAnalysis.elastcity);
     const products = await Product.find({
       hydration: userHydrationType,
       oil: userOilType,

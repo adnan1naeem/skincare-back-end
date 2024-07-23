@@ -1,4 +1,5 @@
-const { ranges } = require("../constants");
+const ProductValueRange = require("../../models/ProductValueRange");
+const { getRanges } = require("../constants");
 
 function isFirstDateLarger(firstDate, secondDate) {
   // Convert the date strings to Date objects if they are not already
@@ -9,7 +10,8 @@ function isFirstDateLarger(firstDate, secondDate) {
   return date1 > date2;
 }
 // Function to determine the skin type based on the value
-function getSkinType(value) {
+async function getSkinType(value) {
+  const ranges = await getRanges(ProductValueRange);
   if (value >= ranges.low.$gte && value <= ranges.low.$lte) {
     return "low";
   } else if (value > ranges.medium.$gt && value <= ranges.medium.$lte) {
