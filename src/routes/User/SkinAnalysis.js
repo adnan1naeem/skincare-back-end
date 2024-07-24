@@ -1,11 +1,16 @@
 const router = require('express').Router();
 const Skinanalysis = require('../../models/SkinAnalysis');
-const SkinAnalysisDescription =require('../../models/SkinAnalysisDescription')
+const SkinAnalysisDescription = require('../../models/SkinAnalysisDescription')
 
 router.post('/', async (req, res) => {
   const { hydration, oilness, elastcity, skinAge } = req.body;
+
   try {
-const user = req.user
+    const user = req.user;
+    if (!user._id) {
+      return res.status(400).json({ message: 'userId is required' });
+    }
+
     const levels = {
       low: (value) => value < 35,
       medium: (value) => value >= 35 && value <= 60,
@@ -22,19 +27,32 @@ const user = req.user
       SkinAnalysisDescription.findOne({ parameter: 'elasticity', level: getLevel(elastcity) }),
       SkinAnalysisDescription.findOne({ parameter: 'hydration', level: getLevel(hydration) })
     ]);
-
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const latest = await Skinanalysis.findOneAndUpdate(
+      {
+        userId: user._id,
+        createdAt: { $gte: today }
+      }, {
+      $set: {
+        hydration,
+        oilness,
+        elastcity,
+        skinAge
+      }
+    }, {
+      upsert: true
+    })
     if (results.every(result => result)) {
-      const skinAnalysis = new Skinanalysis({ hydration, oilness, elastcity, skinAge,userId:user._id });
-      await skinAnalysis.save();
-     return res.status(201).json({
+      return res.status(201).json({
         message: 'Skin analysis data saved successfully',
         descriptions: results
       });
     } else {
-     return res.status(404).json({ message: 'One or more skin analysis descriptions not found' });
+      return res.status(404).json({ message: 'One or more skin analysis descriptions not found' });
     }
   } catch (error) {
-   return res.status(400).json({ message: error.message });
+    return res.status(400).json({ message: error.message });
   }
 });
 const getLevel = (value) => {
@@ -92,7 +110,7 @@ router.get('/skinanalysisbydate', async (req, res) => {
     twoDaysAgo.setHours(0, 0, 0, 0);
 
     const skinAnalyses = await Skinanalysis.find({
-      userId:user._id,
+      userId: user._id,
       createdAt: { $gte: twoDaysAgo, $lte: today }
     });
 
