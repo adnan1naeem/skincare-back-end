@@ -16,7 +16,7 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage });
 
 // POST /api/products - Create a new product
-router.post('/', upload.single('productImage'), async (req, res) => {
+router.post('/', upload.single('file'), async (req, res) => {
   try {
     const {
       featureImages,
@@ -29,8 +29,8 @@ router.post('/', upload.single('productImage'), async (req, res) => {
       oil,
       elasticity,
       availableAmount,
+      detail
     } = req.body;
-
     const productImage = req.file ? req.file.path : null;
 
     const newProduct = new Product({
@@ -45,10 +45,11 @@ router.post('/', upload.single('productImage'), async (req, res) => {
       oil,
       elasticity,
       availableAmount,
+      detail
     });
 
     const savedProduct = await newProduct.save();
-    res.status(201).json(savedProduct);
+    return res.status(201).json(savedProduct);
   } catch (error) {
     console.error('Error creating product:', error);
     res.status(500).json({ error: 'Failed to create product' });

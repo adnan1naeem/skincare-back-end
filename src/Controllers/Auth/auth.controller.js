@@ -11,7 +11,9 @@ const forgetPassword = async (req, res, next) => {
     try {
         const { email } = req.body;
         const user = await User.findOne({ email })
-        if (!user) return Error('user not found')
+        if (!user) return res.status(400).json({
+            message: "User Not Found"
+        })
         const otp = await user.generateVerificationToken(user._id);
         await sendEmail({ to: email, subject: "Reset Password Token", otp })
         return res.status(200).json({ message: "Token Sent", });
@@ -65,7 +67,10 @@ const register = async (req, res) => {
     try {
         const user = new User({ password, lastName, firstName, email: email.toLowerCase(), dob, country, gender });
         await user.save();
-        res.status(201).json({ message: 'User registered successfully' });
+        const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
+        const { password: pwd, ...userWithoutPassword } = user.toObject();
+        res.json({ token, userWithoutPassword });
+        // res.status(201).json({ message: 'User registered successfully' });
     } catch (error) {
         res.status(400).json({ message: error.message });
     }
@@ -85,7 +90,7 @@ const login = async (req, res) => {
             return res.status(401).json({ message: 'Invalid password' });
         }
         const { password: pwd, ...userWithoutPassword } = user.toObject();
-        const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
+        const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET);
 
         res.json({ token, userWithoutPassword });
     } catch (error) {

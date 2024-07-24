@@ -47,7 +47,10 @@ const productSchema = new Schema({
         type: String,
         enum: ['low', 'medium', 'high'],
         required: true
-    }
+    },
+    detail: {
+        type: String,
+    },
 });
 
 const Product = mongoose.model('Product', productSchema);

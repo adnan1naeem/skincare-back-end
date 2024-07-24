@@ -5,6 +5,7 @@ const SkinAnalysisDescriptionScheme = new mongoose.Schema({
     level: { type: String, required: true, enum: ['low', 'medium', 'high'] },
     title: { type: String, required: true },
     description: { type: String, required: true },
+    detail:{type:String,required:true}
 }, {
     timestamps: true
 });

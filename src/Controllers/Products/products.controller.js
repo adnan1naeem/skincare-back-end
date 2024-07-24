@@ -30,8 +30,8 @@ const getRelevant = async (req, res, next) => {
   try {
     const userSkinAnalysis = await SkinAnalysis.findOne({
       userId: new Types.ObjectId(req.user._id),
-    });
 
+    }).sort({ createdAt: -1 })
     // Determine user's skin type based on skin analysis
     const userHydrationType = await getSkinType(userSkinAnalysis.hydration);
     const userOilType = await getSkinType(userSkinAnalysis.oilness);

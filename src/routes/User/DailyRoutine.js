@@ -2,8 +2,8 @@ const express = require('express');
 const router = express.Router();
 const SkincareRoutine = require('../../models/DailyRoutine');
 
-router.put('/', async (req, res) => {
-    const { userId } = req.body;
+router.put('/update', async (req, res) => {
+    const user = req.user
     const updates = req.body; // Assuming the request body contains all fields to update
 
     try {
@@ -14,12 +14,12 @@ router.put('/', async (req, res) => {
         const end = currentTime.setHours(23, 59, 59);
 
         let routine = await SkincareRoutine.findOne({
-            userId, createdAt: {
+            userId: user._id, createdAt: {
                 $gte: start, $lte: end
             }
         });
         if (!routine) {
-            routine = new SkincareRoutine({ userId });
+            routine = new SkincareRoutine({ userId :user._id});
             console.log('New routine created');
         }
 
