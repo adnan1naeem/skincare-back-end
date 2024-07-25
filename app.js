@@ -7,10 +7,11 @@ const router = require("./src/routes");
 require("dotenv").config();
 const app = express();
 app.use(require("morgan")("dev"));
-
+var cors = require('cors')
 // Middleware
 app.use(bodyParser.json());
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+app.use(cors())
 app.get("/api/test", (req, res) => {
   return res.status(200).send("Server Running");
 });
