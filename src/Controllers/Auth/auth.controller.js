@@ -80,7 +80,7 @@ const login = async (req, res) => {
     try {
         const user = await User.findOne({ email: email.toLowerCase() });
         if (!user) {
-            return res.status(401).json({ message: 'Invalid username' });
+            return res.status(401).json({ message: 'Email does not exist' });
         }
         if (user.role == 'admin') {
             return res.status(401).json({ message: 'Login From Admin Dashboard' });

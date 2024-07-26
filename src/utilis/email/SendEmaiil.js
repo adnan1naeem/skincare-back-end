@@ -5,21 +5,24 @@ const nodemailer = require('nodemailer');
 
 const sendEmail = async ({ to, subject, otp }) => {
   try {
-    // Create a transporter
     const transporter = nodemailer.createTransport({
-      service: 'gmail',
-      auth: {
-        user: "hr@techtiz.co",
-        pass: "aitc qooa myjt lcwf",
+      host: "smtpout.secureserver.net",
+      secure: true,
+      secureConnection: false,
+      tls: {
+        ciphers: 'SSLv3'
       },
+      requireTLS: true,
+      port: 465,
+      debug: true,
+      auth: {
+        user: "admin@esthemate.com",
+        pass: "Estival328!"
+      }
     });
 
-    // Read the HTML template file
-    // const source = fs.readFileSync(path.join(__dirname, template), 'utf8');
-    // Compile the template using Handlebars
-    // const compiledTemplate = handlebars.compile(source);
     const options = {
-      from: 'hr@techtiz.co',
+      from: 'admin@esthemate.com',
       to: to,
       subject: subject,
       html: `<h1>OTP is : ${otp}</h1>`,
