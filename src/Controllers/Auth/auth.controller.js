@@ -16,7 +16,7 @@ const forgetPassword = async (req, res, next) => {
         })
         const otp = await user.generateVerificationToken(user._id);
         await sendEmail({ to: email, subject: "Reset Password Token", otp })
-        return res.status(200).json({ message: "Token Sent", });
+        return res.status(200).json({ message: "Token Sent",otp });
     } catch (error) {
         next(error);
     }
@@ -66,6 +66,10 @@ const register = async (req, res) => {
     const { password, lastName, firstName, email, dob, country, gender } = req.body;
     try {
         const user = new User({ password, lastName, firstName, email: email.toLowerCase(), dob, country, gender });
+        const useremail = await User.findOne({ email: email.toLowerCase() });
+        if (useremail) {
+            return res.status(401).json({ message: 'Email already exist' });
+        }
         await user.save();
         const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
         const { password: pwd, ...userWithoutPassword } = user.toObject();
