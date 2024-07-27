@@ -20,7 +20,7 @@ app.set("view engine", "jade");
 app.use("/api", router);
 // MongoDB Connection
 mongoose
-  .connect("mongodb+srv://aali:MsSjm5vjEJZx8bYX@development.emxxguq.mongodb.net/EstheMate", {
+  .connect(`${process.env.MONGO_URI}/${process.env.DB_NAME}`, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
   })
