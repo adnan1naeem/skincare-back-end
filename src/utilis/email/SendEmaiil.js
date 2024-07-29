@@ -6,23 +6,15 @@ const nodemailer = require('nodemailer');
 const sendEmail = async ({ to, subject, otp }) => {
   try {
     const transporter = nodemailer.createTransport({
-      host: "smtpout.secureserver.net",
-      secure: true,
-      secureConnection: false,
-      tls: {
-        ciphers: 'SSLv3'
-      },
-      requireTLS: true,
-      port: 465,
-      debug: true,
+      service: 'gmail',
       auth: {
-        user: "admin@esthemate.com",
-        pass: "Estival328!"
-      }
+        user: "adnan1naeem@gmail.com",
+        pass: "zrde olye bght trfk",
+        }
     });
 
     const options = {
-      from: 'admin@esthemate.com',
+      from: 'adnan1naeem@gmail.com',
       to: to,
       subject: subject,
       html: `<h1>OTP is : ${otp}</h1>`,
