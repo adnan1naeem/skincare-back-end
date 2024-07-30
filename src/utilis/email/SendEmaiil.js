@@ -8,13 +8,13 @@ const sendEmail = async ({ to, subject, otp }) => {
     const transporter = nodemailer.createTransport({
       service: 'gmail',
       auth: {
-        user: "adnan1naeem@gmail.com",
-        pass: "zrde olye bght trfk",
+        user: "esthemates@gmail.com",
+        pass: "ytao qodz favq lttf",
         }
     });
 
     const options = {
-      from: 'adnan1naeem@gmail.com',
+      from: 'esthemates@gmail.com',
       to: to,
       subject: subject,
       html: `<h1>OTP is : ${otp}</h1>`,
