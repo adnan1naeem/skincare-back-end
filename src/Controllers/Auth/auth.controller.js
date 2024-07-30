@@ -79,6 +79,18 @@ const register = async (req, res) => {
         res.status(400).json({ message: error.message });
     }
 }
+const useralreadyExist = async (req, res) => {
+    const { email } = req.body;
+    try {
+        const existingUser = await User.findOne({ email: email.toLowerCase() });
+        if (existingUser) {
+          return res.status(409).json({ message: 'Email already exists' });
+        }
+        return res.status(200).json({ message: 'Valid email' });
+    } catch (error) {
+        res.status(400).json({ message: error.message });
+    }
+}
 const login = async (req, res) => {
     const { email, password } = req.body;
     try {
@@ -106,5 +118,6 @@ module.exports = {
     register,
     forgetPassword,
     resetPassword,
-    login
+    login,
+    useralreadyExist,
 }
