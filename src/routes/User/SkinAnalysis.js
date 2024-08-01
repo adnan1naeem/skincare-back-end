@@ -1,4 +1,5 @@
 const router = require('express').Router();
+const Description = require('../../models/Description');
 const Skinanalysis = require('../../models/SkinAnalysis');
 const SkinAnalysisDescription = require('../../models/SkinAnalysisDescription')
 
@@ -60,41 +61,14 @@ const getLevel = (value) => {
   if (value >= 35 && value <= 60) return 'medium';
   if (value > 60) return 'high';
 };
-const descriptionsArray = [
-  { oilness: 'high', elasticity: 'high', hydration: 'high', description: 'Description for High Oilness, High Elasticity, High Hydration' },
-  { oilness: 'high', elasticity: 'high', hydration: 'medium', description: 'Description for High Oilness, High Elasticity, medium Hydration' },
-  { oilness: 'high', elasticity: 'high', hydration: 'low', description: 'Description for High Oilness, High Elasticity, Low Hydration' },
-  { oilness: 'high', elasticity: 'medium', hydration: 'high', description: 'Description for High Oilness, medium Elasticity, High Hydration' },
-  { oilness: 'high', elasticity: 'medium', hydration: 'medium', description: 'Description for High Oilness, medium Elasticity, medium Hydration' },
-  { oilness: 'high', elasticity: 'medium', hydration: 'low', description: 'Description for High Oilness, medium Elasticity, Low Hydration' },
-  { oilness: 'high', elasticity: 'low', hydration: 'high', description: 'Description for High Oilness, Low Elasticity, High Hydration' },
-  { oilness: 'high', elasticity: 'low', hydration: 'medium', description: 'Description for High Oilness, Low Elasticity, medium Hydration' },
-  { oilness: 'high', elasticity: 'low', hydration: 'low', description: 'Description for High Oilness, Low Elasticity, Low Hydration' },
-  { oilness: 'medium', elasticity: 'high', hydration: 'high', description: 'Description for medium Oilness, High Elasticity, High Hydration' },
-  { oilness: 'medium', elasticity: 'high', hydration: 'medium', description: 'Description for medium Oilness, High Elasticity, medium Hydration' },
-  { oilness: 'medium', elasticity: 'high', hydration: 'low', description: 'Description for medium Oilness, High Elasticity, Low Hydration' },
-  { oilness: 'medium', elasticity: 'medium', hydration: 'high', description: 'Description for medium Oilness, medium Elasticity, High Hydration' },
-  { oilness: 'medium', elasticity: 'medium', hydration: 'medium', description: 'Description for medium Oilness, medium Elasticity, medium Hydration' },
-  { oilness: 'medium', elasticity: 'medium', hydration: 'low', description: 'Description for medium Oilness, medium Elasticity, Low Hydration' },
-  { oilness: 'medium', elasticity: 'low', hydration: 'high', description: 'Description for medium Oilness, Low Elasticity, High Hydration' },
-  { oilness: 'medium', elasticity: 'low', hydration: 'medium', description: 'Description for medium Oilness, Low Elasticity, medium Hydration' },
-  { oilness: 'medium', elasticity: 'low', hydration: 'low', description: 'Description for medium Oilness, Low Elasticity, Low Hydration' },
-  { oilness: 'low', elasticity: 'high', hydration: 'high', description: 'Description for Low Oilness, High Elasticity, High Hydration' },
-  { oilness: 'low', elasticity: 'high', hydration: 'medium', description: 'Description for Low Oilness, High Elasticity, medium Hydration' },
-  { oilness: 'low', elasticity: 'high', hydration: 'low', description: 'Description for Low Oilness, High Elasticity, Low Hydration' },
-  { oilness: 'low', elasticity: 'medium', hydration: 'high', description: 'Description for Low Oilness, medium Elasticity, High Hydration' },
-  { oilness: 'low', elasticity: 'medium', hydration: 'medium', description: 'Description for Low Oilness, medium Elasticity, medium Hydration' },
-  { oilness: 'low', elasticity: 'medium', hydration: 'low', description: 'Description for Low Oilness, medium Elasticity, Low Hydration' },
-  { oilness: 'low', elasticity: 'low', hydration: 'high', description: 'Description for Low Oilness, Low Elasticity, High Hydration' },
-  { oilness: 'low', elasticity: 'low', hydration: 'medium', description: 'Description for Low Oilness, Low Elasticity, medium Hydration' },
-  { oilness: 'low', elasticity: 'low', hydration: 'low', description: 'Description for Low Oilness, Low Elasticity, Low Hydration' }
-];
-const getDescription = (oilness, elasticity, hydration) => {
-  const match = descriptionsArray.find(
-    (desc) => desc.oilness == oilness && desc.elasticity == elasticity && desc.hydration == hydration
-  );
-  return match ? match.description : 'No matching description found';
-};
+
+async function getDescription(oilnessLevel, elasticityLevel, hydrationLevel) {
+  return await Description.findOne({
+    oilness: oilnessLevel,
+    elasticity: elasticityLevel,
+    hydration: hydrationLevel,
+  });
+}
 router.get('/skinanalysisbydate', async (req, res) => {
   try {
     const user = req.user
@@ -124,7 +98,7 @@ router.get('/skinanalysisbydate', async (req, res) => {
         SkinAnalysisDescription.findOne({ parameter: 'elasticity', level: getLevel(analysis.elastcity) }),
         SkinAnalysisDescription.findOne({ parameter: 'hydration', level: getLevel(analysis.hydration) })
       ]);
-
+      const  mainDescription=await getDescription(getLevel(analysis.oilness), getLevel(analysis.elastcity), getLevel(analysis.hydration))
       return {
         ...analysis.toObject(),
         descriptions: {
@@ -132,7 +106,7 @@ router.get('/skinanalysisbydate', async (req, res) => {
           elasticity: results[1],
           hydration: results[2]
         },
-        mainDescription: getDescription(getLevel(analysis.oilness), getLevel(analysis.elastcity), getLevel(analysis.hydration))
+        mainDescription: mainDescription
       };
     }));
 
