@@ -106,7 +106,7 @@ router.get('/skinanalysisbydate', async (req, res) => {
           elasticity: results[1],
           hydration: results[2]
         },
-        mainDescription: mainDescription
+        mainDescription: mainDescription?.description
       };
     }));
 
