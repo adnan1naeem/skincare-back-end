@@ -57,9 +57,9 @@ router.post('/', async (req, res) => {
   }
 });
 const getLevel = (value) => {
-  if (value < 35) return 'low';
-  if (value >= 35 && value <= 60) return 'medium';
-  if (value > 60) return 'high';
+  if (value <= 35) return 'low';
+  if (value > 35 && value < 41) return 'medium';
+  if (value >= 41) return 'high';
 };
 
 async function getDescription(oilnessLevel, elasticityLevel, hydrationLevel) {
