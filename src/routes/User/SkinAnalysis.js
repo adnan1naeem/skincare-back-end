@@ -2,10 +2,11 @@ const router = require('express').Router();
 const Description = require('../../models/Description');
 const Skinanalysis = require('../../models/SkinAnalysis');
 const SkinAnalysisDescription = require('../../models/SkinAnalysisDescription')
-
+const moment = require('moment-timezone');
 router.post('/', async (req, res) => {
   const { hydration, oilness, elastcity, skinAge } = req.body;
-
+  const timeZone = req.headers['timezone'];
+  console.log("timeZone"+timeZone)
   try {
     const user = req.user;
     if (!user._id) {
@@ -23,17 +24,18 @@ router.post('/', async (req, res) => {
       if (levels.medium(value)) return 'medium';
       if (levels.high(value)) return 'high';
     };
+
     const results = await Promise.all([
       SkinAnalysisDescription.findOne({ parameter: 'oilness', level: getLevel(oilness) }),
       SkinAnalysisDescription.findOne({ parameter: 'elasticity', level: getLevel(elastcity) }),
       SkinAnalysisDescription.findOne({ parameter: 'hydration', level: getLevel(hydration) })
     ]);
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
+    const today = moment.tz(timeZone).startOf('day').toDate();
+    const endOfDay = moment.tz(timeZone).endOf('day').toDate();
     const latest = await Skinanalysis.findOneAndUpdate(
       {
         userId: user._id,
-        createdAt: { $gte: today }
+        createdAt: { $gte: today, $lt: endOfDay }
       }, {
       $set: {
         hydration,

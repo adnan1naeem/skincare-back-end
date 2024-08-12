@@ -14,9 +14,9 @@ async function getSkinType(value) {
   const ranges = await getRanges(ProductValueRange);
   if (value >= ranges.low.$gte && value <= ranges.low.$lte) {
     return "low";
-  } else if (value > ranges.medium.$gt && value <= ranges.medium.$lte) {
+  } else if (value >= ranges.medium.$gt && value <= ranges.medium.$lte) {
     return "medium";
-  } else if (value > ranges.high.$gt && value <= ranges.high.$lte) {
+  } else if (value >= ranges.high.$gt && value <= ranges.high.$lte) {
     return "high";
   }
   return null;
