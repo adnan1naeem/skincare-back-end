@@ -71,7 +71,7 @@ const register = async (req, res) => {
             return res.status(401).json({ message: 'Email already exist' });
         }
         await user.save();
-        const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
+        const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET);
         const { password: pwd, ...userWithoutPassword } = user.toObject();
         res.json({ token, userWithoutPassword });
         // res.status(201).json({ message: 'User registered successfully' });
