@@ -78,17 +78,9 @@ router.get('/skinanalysisbydate', async (req, res) => {
       return res.status(400).json({ message: 'userId is required' });
     }
 
-    const today = new Date();
-    today.setHours(23, 59, 59, 999);
-
-    const twoDaysAgo = new Date();
-    twoDaysAgo.setDate(today.getDate() - 2);
-    twoDaysAgo.setHours(0, 0, 0, 0);
-
-    const skinAnalyses = await Skinanalysis.find({
-      userId: user._id,
-      createdAt: { $gte: twoDaysAgo, $lte: today }
-    });
+    const skinAnalyses = await Skinanalysis.find({ userId: user._id })
+      .sort({ createdAt: -1 })
+      .limit(3);
 
     if (skinAnalyses.length === 0) {
       return res.status(200).json([]);
