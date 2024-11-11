@@ -35,17 +35,17 @@ const productSchema = new Schema({
     },
     hydration: {
         type: String,
-        enum: ['low', 'medium', 'high'],
+        enum: ['low', 'medium', 'high','any'],
         required: true
     },
     oil: {
         type: String,
-        enum: ['low', 'medium', 'high'],
+        enum: ['low', 'medium', 'high','any'],
         required: true
     },
     elasticity: {
         type: String,
-        enum: ['low', 'medium', 'high'],
+        enum: ['low', 'medium', 'high','any'],
         required: true
     },
     detail: {

@@ -28,10 +28,10 @@ router.post('/', upload.single('file'), async (req, res) => {
       availableAmount,
       detail
     } = req.body;
-    // const productImage = req.file ? req.file.path : null;
+    const productImage = req.file ? req.file.path : null;
     console.log(req.body)
     const newProduct = new Product({
-      productImage: req.body.productImage,
+      productImage,
       featureImages,
       title,
       description,

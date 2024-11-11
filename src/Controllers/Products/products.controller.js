@@ -36,10 +36,12 @@ const getRelevant = async (req, res, next) => {
     const userHydrationType = await getSkinType(userSkinAnalysis.hydration);
     const userOilType = await getSkinType(userSkinAnalysis.oilness);
     const userElasticityType = await getSkinType(userSkinAnalysis.elastcity);
-    const products = await Product.find({
-      hydration: userHydrationType,
-      oil: userOilType,
-      elasticity: userElasticityType,
+    const products = await Product.find({ 
+      $and: [ 
+        { $or: [{ hydration: userHydrationType }, { hydration: "any" }] }, 
+        { $or: [{ oil: userOilType }, { oil: "any" }] }, 
+        { $or: [{ elasticity: userElasticityType }, { elasticity: "any" }] }, 
+      ], 
     });
     return res.status(200).json({
       products,
