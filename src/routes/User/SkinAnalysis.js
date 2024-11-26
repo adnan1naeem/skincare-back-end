@@ -80,7 +80,6 @@ router.get('/skinanalysisbydate', async (req, res) => {
 
     const skinAnalyses = await Skinanalysis.find({ userId: user._id })
       .sort({ createdAt: -1 })
-      .limit(3);
 
     if (skinAnalyses.length === 0) {
       return res.status(200).json([]);
@@ -105,6 +104,27 @@ router.get('/skinanalysisbydate', async (req, res) => {
     }));
 
     return res.status(200).json(analysesWithDescriptions);
+  } catch (error) {
+    console.error('Error fetching skin analyses:', error);
+    return res.status(500).json({ message: 'Internal server error' });
+  }
+});
+router.get('/skinanalysisStat', async (req, res) => {
+  try {
+    const user = req.user
+    if (!user._id) {
+      return res.status(400).json({ message: 'userId is required' });
+    }
+
+    const skinAnalyses = await Skinanalysis.find({ userId: user._id })
+      .sort({ createdAt: -1 })
+      .limit(5)
+
+    if (skinAnalyses.length === 0) {
+      return res.status(200).json([]);
+    }
+
+    return res.status(200).json(skinAnalyses);
   } catch (error) {
     console.error('Error fetching skin analyses:', error);
     return res.status(500).json({ message: 'Internal server error' });
