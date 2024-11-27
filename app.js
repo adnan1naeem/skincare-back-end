@@ -1,5 +1,7 @@
 const express = require("express");
 const mongoose = require("mongoose");
+const cron = require ("node-cron");
+const {fetchAndProcessUrls} = require ("./src/cron/amazonScrapingCron");
 const bodyParser = require("body-parser");
 // const authRoutes = require('./routes/Auth');
 const path = require('path');
@@ -28,6 +30,14 @@ mongoose
     console.log("MongoDB connected");
   })
   .catch((err) => console.error(err));
+
+// Cron job for price scraping of amazon urls
+
+cron.schedule('0 0 * * *', async () => {
+  console.log('Cron job started at 12:40 PM');
+   const results = await fetchAndProcessUrls();
+   console.log('Final Scraping Results:', results);
+});
 
 // Error handling middleware
 app.use((err, req, res, next) => {
