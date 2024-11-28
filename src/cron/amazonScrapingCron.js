@@ -79,10 +79,6 @@ const getAmazonProductDetails = async (url) => {
     } catch (error) {
       console.error('Error fetching or processing URLs:', error.message);
       throw new Error('Failed to process product URLs.');
-    } finally {
-      // Close the MongoDB connection
-      await mongoose.connection.close();
-      console.log('Disconnected from MongoDB');
     }
   };
   
