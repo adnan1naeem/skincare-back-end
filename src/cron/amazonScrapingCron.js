@@ -83,8 +83,7 @@ const getAmazonProductDetails = async (url) => {
   };
   
   const validatePrice = (price) => {
-    // Check if the price matches the pattern for numbers with two decimal places
-    const pricePattern = /^\d+(\.\d{2})?$/;
+    const pricePattern = /^\d+(\.\d{1,2})?$/;
     return pricePattern.test(price);
   };
 
