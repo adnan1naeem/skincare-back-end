@@ -3,9 +3,13 @@ const cheerio = require('cheerio');
 const Product = require('../models/ProductListing');
 
 const HEADERS = {
-    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36',
-    'Accept-Language': 'en-US,en;q=0.9',
-  };
+  'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36',
+  'Accept-Language': 'en-US,en;q=0.9',
+  'Accept-Encoding': 'gzip, deflate, br',
+  'Connection': 'keep-alive',
+  'Upgrade-Insecure-Requests': '1',
+  'Cache-Control': 'no-cache',
+};
 
 
 const getAmazonProductDetails = async (url) => {
@@ -40,7 +44,13 @@ const getAmazonProductDetails = async (url) => {
         basisPrice
       };
     } catch (error) {
-      console.error('Error scraping Amazon product details:', error.message);
+      if (error.response) {
+        console.error('Error status:', error.response.status);
+        console.error('Response headers:', error.response.headers);
+        console.error('Response data:', error.response.data);
+      } else {
+        console.error('Error message:', error.message);
+      }
       throw new Error('Failed to scrape product details.');
     }
   };
