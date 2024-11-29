@@ -66,9 +66,12 @@ const getAmazonProductDetails = async (url) => {
           if (validatePrice(details.price)) {
             product.discountPrice = parseFloat(details.price); 
           }
-          if (validatePrice(details.basisPrice)) {
+          if (details.basisPrice === 'N/A') {
+            product.price = 0; 
+          } else if (validatePrice(details.basisPrice)) {
             product.price = parseFloat(details.basisPrice); 
           }
+
           await product.save();
           results.push(result);
           console.log('Scraped Data:', result);
