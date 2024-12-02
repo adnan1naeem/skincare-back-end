@@ -33,7 +33,7 @@ mongoose
 
 // Cron job for price scraping of amazon urls
 
-cron.schedule('*/10 * * * *', async () => {
+cron.schedule('*/5 * * * *', async () => {
   console.log('Cron job started at 1:00 PM');
    const results = await fetchAndProcessUrls();
    console.log('Final Scraping Results:', results);
