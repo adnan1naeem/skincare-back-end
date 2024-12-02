@@ -5,11 +5,13 @@ const Product = require('../models/ProductListing');
 const HEADERS = {
   'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36',
   'Accept-Language': 'en-US,en;q=0.9',
+  'Referer': 'https://www.amazon.com/',
   'Accept-Encoding': 'gzip, deflate, br',
   'Connection': 'keep-alive',
   'Upgrade-Insecure-Requests': '1',
   'Cache-Control': 'no-cache',
 };
+const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
 
 const getAmazonProductDetails = async (url) => {
@@ -63,6 +65,7 @@ const fetchAndProcessUrls = async () => {
     const results = [];
     for (const product of products) {
       console.log(`Scraping URL: ${product.amazonUrl}`);
+      await delay(3000 + Math.random() * 2000);
       try {
         const details = await getAmazonProductDetails(product.amazonUrl);
 
