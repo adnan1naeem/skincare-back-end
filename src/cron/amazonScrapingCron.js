@@ -2,19 +2,22 @@ const axios = require('axios');
 const cheerio = require('cheerio');
 const Product = require('../models/ProductListing');
 
-const USER_AGENTS = [
-  'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36',
-  'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36',
-  'Mozilla/5.0 (iPhone; CPU iPhone OS 15_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/15.0 Mobile/15E148 Safari/604.1',
-];
+// const USER_AGENTS = [
+//   'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36',
+//   'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36',
+//   'Mozilla/5.0 (iPhone; CPU iPhone OS 15_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/15.0 Mobile/15E148 Safari/604.1',
+// ];
 
 const HEADERS = {
-  'User-Agent': USER_AGENTS[Math.floor(Math.random() * USER_AGENTS.length)],
-  'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8',
+  'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36',
   'Accept-Language': 'en-US,en;q=0.9',
   'Referer': 'https://www.amazon.com/',
+  'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8',
+  'Upgrade-Insecure-Requests': '1',
+  'Cache-Control': 'max-age=0',
   'Connection': 'keep-alive',
-  'Cache-Control': 'no-cache',
+  'DNT': '1', // Do Not Track header
+  'TE': 'Trailers',
 };
 const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
@@ -70,7 +73,7 @@ const fetchAndProcessUrls = async () => {
     const results = [];
     for (const product of products) {
       console.log(`Scraping URL: ${product.amazonUrl}`);
-      await delay(3000 + Math.random() * 2000);
+      await delay(5000 + Math.random() * 2000);
       try {
         const details = await getAmazonProductDetails(product.amazonUrl);
 
