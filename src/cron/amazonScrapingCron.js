@@ -2,13 +2,18 @@ const axios = require('axios');
 const cheerio = require('cheerio');
 const Product = require('../models/ProductListing');
 
+const USER_AGENTS = [
+  'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36',
+  'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36',
+  'Mozilla/5.0 (iPhone; CPU iPhone OS 15_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/15.0 Mobile/15E148 Safari/604.1',
+];
+
 const HEADERS = {
-  'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36',
+  'User-Agent': USER_AGENTS[Math.floor(Math.random() * USER_AGENTS.length)],
+  'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8',
   'Accept-Language': 'en-US,en;q=0.9',
   'Referer': 'https://www.amazon.com/',
-  'Accept-Encoding': 'gzip, deflate, br',
   'Connection': 'keep-alive',
-  'Upgrade-Insecure-Requests': '1',
   'Cache-Control': 'no-cache',
 };
 const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
