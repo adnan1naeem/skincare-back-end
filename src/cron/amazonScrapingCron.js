@@ -16,8 +16,9 @@ const HEADERS = {
   'Upgrade-Insecure-Requests': '1',
   'Cache-Control': 'max-age=0',
   'Connection': 'keep-alive',
-  'DNT': '1', // Do Not Track header
+  'DNT': '1',
   'TE': 'Trailers',
+  'Cookie': 'i18n-prefs=USD; ubid-main=123-4567890-1234567;',
 };
 const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
