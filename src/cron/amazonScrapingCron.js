@@ -7,19 +7,27 @@ const Product = require('../models/ProductListing');
 //   'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36',
 //   'Mozilla/5.0 (iPhone; CPU iPhone OS 15_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/15.0 Mobile/15E148 Safari/604.1',
 // ];
-
 const HEADERS = {
   'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36',
   'Accept-Language': 'en-US,en;q=0.9',
   'Referer': 'https://www.amazon.com/',
-  'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8',
-  'Upgrade-Insecure-Requests': '1',
-  'Cache-Control': 'max-age=0',
+  'Accept-Encoding': 'gzip, deflate, br',
   'Connection': 'keep-alive',
-  'DNT': '1',
-  'TE': 'Trailers',
-  'Cookie': 'i18n-prefs=USD; ubid-main=123-4567890-1234567;',
+  'Upgrade-Insecure-Requests': '1',
+  'Cache-Control': 'no-cache',
 };
+// const HEADERS = {
+//   'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36',
+//   'Accept-Language': 'en-US,en;q=0.9',
+//   'Referer': 'https://www.amazon.com/',
+//   'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8',
+//   'Upgrade-Insecure-Requests': '1',
+//   'Cache-Control': 'max-age=0',
+//   'Connection': 'keep-alive',
+//   'DNT': '1',
+//   'TE': 'Trailers',
+//   'Cookie': 'i18n-prefs=USD; ubid-main=123-4567890-1234567;',
+// };
 const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
 
