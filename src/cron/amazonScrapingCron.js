@@ -27,6 +27,8 @@ const getAmazonProductDetails = async (url) => {
   try {
     // Fetch the page content
     const response = await axios.get(url, { headers: HEADERS });
+    console.log(response.data,"data");
+    
     const $ = cheerio.load(response.data);
     // Focus on the specific div with id="ppd"
     const ppd = $('#ppd');
