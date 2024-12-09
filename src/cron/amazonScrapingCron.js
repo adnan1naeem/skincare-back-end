@@ -27,7 +27,6 @@ const getAmazonProductDetails = async (url) => {
   try {
     // Fetch the page content
     const response = await axios.get(url, { headers: HEADERS });
-    console.log(response.data,"data");
     
     const $ = cheerio.load(response.data);
     // Focus on the specific div with id="ppd"
@@ -42,7 +41,12 @@ const getAmazonProductDetails = async (url) => {
     const priceFraction = ppd.find('.a-price-fraction').first().text().trim() || '';
 
     const price = priceWhole !== 'N/A' ? `${priceWhole}${priceFraction}` : 'N/A';
-
+    console.log(priceWhole,"whole price");
+    console.log(priceFraction,"floating price");
+    console.log(price,"price");
+    
+    
+    
     let basisPrice = 'N/A';
     const basisPriceElement = ppd.find('span.basisPrice');
     if (basisPriceElement.length) {
