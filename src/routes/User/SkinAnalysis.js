@@ -1,6 +1,7 @@
 const router = require('express').Router();
 const Description = require('../../models/Description');
 const Skinanalysis = require('../../models/SkinAnalysis');
+const LevelRange = require('../../models/LevelRangeSchema');
 const SkinAnalysisDescription = require('../../models/SkinAnalysisDescription')
 const moment = require('moment-timezone');
 router.post('/', async (req, res) => {
@@ -12,7 +13,7 @@ router.post('/', async (req, res) => {
     if (!user._id) {
       return res.status(400).json({ message: 'userId is required' });
     }
-
+    const levelRanges = await LevelRange.find();
     const levels = {
       low: (value) => value < 35,
       medium: (value) => value >= 35 && value <= 60,
@@ -20,9 +21,8 @@ router.post('/', async (req, res) => {
     };
 
     const getLevel = (value) => {
-      if (levels.low(value)) return 'low';
-      if (levels.medium(value)) return 'medium';
-      if (levels.high(value)) return 'high';
+      const range = levelRanges.find(r => value >= r.minValue && value <= r.maxValue);
+      return range ? range.level : null;
     };
 
     const results = await Promise.all([
@@ -58,10 +58,11 @@ router.post('/', async (req, res) => {
     return res.status(400).json({ message: error.message });
   }
 });
-const getLevel = (value) => {
-  if (value <= 35) return 'low';
-  if (value > 35 && value < 41) return 'medium';
-  if (value >= 41) return 'high';
+const getLevel = async (value) => {
+const levelRanges = await LevelRange.find();
+
+  const range = levelRanges.find(r => value >= r.minValue && value <= r.maxValue);
+  return range ? range.level : null;
 };
 
 async function getDescription(oilnessLevel, elasticityLevel, hydrationLevel) {
