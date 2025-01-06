@@ -60,20 +60,15 @@ router.get('/getRoutine/:userId', async (req, res) => {
         }
 
         const currentTime = new Date();
-        const lastUpdatedTime = new Date(routine.updatedAt);
+        const timeDiff = currentTime - routine.lastUpdated;
 
-        const resetTime = new Date(lastUpdatedTime);
-        resetTime.setHours(0, 0, 0, 0); 
-        resetTime.setDate(resetTime.getDate() + 1); 
 
-        if (currentTime >= resetTime) {
+        if (timeDiff > 24 * 60 * 60 * 1000) {
             routine.cleanse = false;
             routine.tone = false;
             routine.hydrate = false;
             routine.moisturize = false;
             routine.protection = false;
-            routine.updatedAt = currentTime; 
-            await routine.save();
         }
 
         return res.status(200).json(routine);
