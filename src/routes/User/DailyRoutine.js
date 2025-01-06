@@ -13,26 +13,47 @@ const isNewDayForUser = (lastUpdated, userTimezone) => {
 };
 
 router.put('/update', async (req, res) => {
-    const user = req.user
+    const user = req.user;
     const updates = req.body; // Assuming the request body contains all fields to update
+    const userTimezone = req.headers.timezone || 'UTC'; // Fetch timezone from headers
 
     try {
         console.log('Request body:', req.body);
 
         const currentTime = new Date();
-        const start = currentTime.setHours(0, 0, 0, 0);
-        const end = currentTime.setHours(23, 59, 59);
+        const start = currentTime.setHours(0, 0, 0, 0); // Start of the day in UTC
+        const end = currentTime.setHours(23, 59, 59); // End of the day in UTC
 
+        // Find routine for the user within the current day in UTC
         let routine = await SkincareRoutine.findOne({
-            userId: user._id, createdAt: {
-                $gte: start, $lte: end
+            userId: user._id,
+            createdAt: {
+                $gte: start,
+                $lte: end
             }
         });
+
+        // If no routine found for today, create a new routine
         if (!routine) {
-            routine = new SkincareRoutine({ userId :user._id});
+            routine = new SkincareRoutine({ userId: user._id });
             console.log('New routine created');
         }
 
+        // Convert the updatedAt field to the user's timezone and check if it's a new day
+        const lastUpdatedLocal = moment.tz(routine.updatedAt, userTimezone); // Convert to user's timezone
+        console.log('Last Updated Local:', lastUpdatedLocal.format());
+
+        if (isNewDayForUser(routine.updatedAt, userTimezone)) {
+            console.log('Resetting routine for a new day');
+            // Reset routine fields for a new day
+            routine.cleanse = false;
+            routine.tone = false;
+            routine.hydrate = false;
+            routine.moisturize = false;
+            routine.protection = false;
+        }
+
+        // Update the routine with the new values from the request body
         for (const key in updates) {
             if (key !== 'userId' && routine[key] !== undefined) {
                 console.log(`Updating field ${key} to ${updates[key]}`);
@@ -40,6 +61,7 @@ router.put('/update', async (req, res) => {
             }
         }
 
+        // Save the updated routine
         await routine.save();
 
         return res.status(200).json({ message: 'Routine updated successfully', routine });
