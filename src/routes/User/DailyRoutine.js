@@ -60,7 +60,7 @@ router.get('/getRoutine/:userId', async (req, res) => {
         }
 
         const currentTime = new Date();
-        const lastUpdatedTime = new Date(routine.lastUpdated);
+        const lastUpdatedTime = new Date(routine.updatedAt);
 
         const resetTime = new Date(lastUpdatedTime);
         resetTime.setHours(0, 0, 0, 0); 
@@ -72,7 +72,7 @@ router.get('/getRoutine/:userId', async (req, res) => {
             routine.hydrate = false;
             routine.moisturize = false;
             routine.protection = false;
-            routine.lastUpdated = currentTime; 
+            routine.updatedAt = currentTime; 
             await routine.save();
         }
 
